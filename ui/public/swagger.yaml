@@ -1,0 +1,454 @@
+openapi: 3.0.3
+info:
+  title: USBArmyKnife  API
+  description: REST API and WebSocket endpoints for controlling USBArmyKnife  device
+  version: 1.0.0
+  contact:
+    name: USBArmyKnife 
+    url: https://github.com/i-am-shodan/USBArmyKnife
+
+servers:
+  - url: http://4.3.2.1:8080
+    description: Device AP mode (default)
+  - url: http://{ip}:8080
+    description: Device Station mode
+    variables:
+      ip:
+        default: 192.168.1.100
+        description: Device IP address
+
+paths:
+  /data.json:
+    get:
+      summary: Get device status and information
+      description: Returns comprehensive device status including file listing, logs, settings, and capabilities
+      operationId: getDeviceData
+      tags:
+        - Device
+      responses:
+        '200':
+          description: Device data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sdCardPercentFull:
+                    type: integer
+                    description: SD card usage percentage
+                  uptime:
+                    type: string
+                    description: Device uptime
+                  status:
+                    type: string
+                    description: Payload running status
+                  errorCount:
+                    type: integer
+                    description: Total error count
+                  USBmode:
+                    type: string
+                    description: Current USB mode
+                  freeHeap:
+                    type: integer
+                    description: Free heap memory in bytes
+                  heapSize:
+                    type: integer
+                    description: Total heap size in bytes
+                  agentConnected:
+                    type: boolean
+                    description: Agent connection status
+                  machineName:
+                    type: string
+                    description: Agent machine name
+                  version:
+                    type: string
+                    description: Git commit hash
+                  heapUsagePc:
+                    type: integer
+                    description: Heap usage percentage
+                  numCores:
+                    type: integer
+                    description: Number of CPU cores
+                  chipModel:
+                    type: string
+                    description: Chip model
+                  fileListing:
+                    type: array
+                    items:
+                      type: string
+                    description: List of files on SD card
+                  logMessages:
+                    type: array
+                    items:
+                      type: string
+                    description: Log messages
+                  settingCategories:
+                    type: array
+                    items:
+                      type: object
+                    description: Device settings by category
+                  capabilities:
+                    type: array
+                    items:
+                      type: string
+                    description: Device capabilities (SD, WIFI, TFT, etc.)
+
+  /download:
+    get:
+      summary: Download a file from the device
+      description: Downloads a file from the SD card
+      operationId: downloadFile
+      tags:
+        - Files
+      parameters:
+        - name: filename
+          in: query
+          required: true
+          description: Path to file on SD card (e.g., /progressbar.ds)
+          schema:
+            type: string
+            example: /progressbar.ds
+      responses:
+        '200':
+          description: File content
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: File not found
+
+  /runfile:
+    get:
+      summary: Execute a DuckyScript file
+      description: Runs a .ds file from the SD card
+      operationId: runFile
+      tags:
+        - Execution
+      parameters:
+        - name: filename
+          in: query
+          required: true
+          description: Path to .ds file on SD card
+          schema:
+            type: string
+            example: /progressbar.ds
+      responses:
+        '302':
+          description: Redirects to index.html after execution
+
+  /rawinput:
+    get:
+      summary: Execute a raw DuckyScript command
+      description: Executes a single DuckyScript command immediately
+      operationId: rawInput
+      tags:
+        - Execution
+      parameters:
+        - name: rawCommand
+          in: query
+          required: true
+          description: DuckyScript command to execute (URL encoded)
+          schema:
+            type: string
+            example: STRING Hello World
+      responses:
+        '302':
+          description: Redirects to index.html after execution
+
+  /runagentcmd:
+    get:
+      summary: Execute a command via agent
+      description: Runs a command on the connected agent machine
+      operationId: runAgentCommand
+      tags:
+        - Agent
+      parameters:
+        - name: rawCommand
+          in: query
+          required: true
+          description: Command to execute on agent (URL encoded)
+          schema:
+            type: string
+            example: dir
+      responses:
+        '302':
+          description: Redirects to index.html after execution
+
+  /showimage:
+    get:
+      summary: Display PNG image on TFT
+      description: Shows a PNG image on the device display
+      operationId: showImage
+      tags:
+        - Display
+      parameters:
+        - name: filename
+          in: query
+          required: true
+          description: Path to PNG file on SD card
+          schema:
+            type: string
+            example: /progressbar_1.png
+      responses:
+        '302':
+          description: Redirects to index.html after displaying
+
+  /marauder:
+    get:
+      summary: Execute ESP32 Marauder command
+      description: Runs an ESP32 Marauder attack command
+      operationId: runMarauder
+      tags:
+        - Marauder
+      parameters:
+        - name: marauderCmd
+          in: query
+          required: true
+          description: Marauder command to execute
+          schema:
+            type: string
+            example: attack -t rickroll
+      responses:
+        '302':
+          description: Redirects to index.html after execution
+
+  /mic:
+    get:
+      summary: Control microphone capture
+      description: Start or stop microphone audio capture
+      operationId: controlMic
+      tags:
+        - Audio
+      parameters:
+        - name: enabled
+          in: query
+          required: true
+          description: Enable or disable microphone
+          schema:
+            type: string
+            enum: [true, false]
+            example: true
+      responses:
+        '200':
+          description: Microphone state changed
+
+  /delete:
+    get:
+      summary: Delete a file
+      description: Deletes a file from the SD card
+      operationId: deleteFile
+      tags:
+        - Files
+      parameters:
+        - name: filename
+          in: query
+          required: true
+          description: Path to file to delete
+          schema:
+            type: string
+            example: /old_file.ds
+      responses:
+        '302':
+          description: Redirects to index.html after deletion
+
+  /set:
+    get:
+      summary: Set device setting
+      description: Set or remove a device configuration setting
+      operationId: setSetting
+      tags:
+        - Settings
+      parameters:
+        - name: name
+          in: query
+          required: true
+          description: Setting name
+          schema:
+            type: string
+            example: wifi-ap
+        - name: value
+          in: query
+          required: false
+          description: Setting value (omit to remove setting)
+          schema:
+            type: string
+            example: MyWiFiNetwork
+      responses:
+        '302':
+          description: Redirects to index.html after setting
+
+  /clearlogs:
+    get:
+      summary: Clear log messages
+      description: Clears all log messages from device memory
+      operationId: clearLogs
+      tags:
+        - Device
+      responses:
+        '302':
+          description: Redirects to index.html after clearing
+
+  /generate_204:
+    get:
+      summary: Generate 204 redirect
+      description: Redirects to main page (used for captive portal detection)
+      operationId: generate204
+      tags:
+        - Device
+      responses:
+        '302':
+          description: Redirects to index.html
+
+  /index.html:
+    get:
+      summary: Get web interface
+      description: Returns the main web interface HTML page
+      operationId: getIndex
+      tags:
+        - Web Interface
+      responses:
+        '200':
+          description: HTML content
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /websockify:
+    get:
+      summary: VNC WebSocket connection
+      description: WebSocket endpoint for VNC remote desktop functionality
+      operationId: websockify
+      tags:
+        - WebSocket
+      responses:
+        '101':
+          description: Switching protocols to WebSocket
+      x-code-samples:
+        - lang: JavaScript
+          source: |
+            const ws = new WebSocket('ws://4.3.2.1:8080/websockify');
+            ws.onopen = () => console.log('Connected');
+            ws.onmessage = (event) => console.log('Data:', event.data);
+            ws.onerror = (error) => console.error('Error:', error);
+
+  /audio:
+    get:
+      summary: Audio WebSocket connection
+      description: WebSocket endpoint for real-time audio streaming from microphone
+      operationId: audioWebSocket
+      tags:
+        - WebSocket
+      responses:
+        '101':
+          description: Switching protocols to WebSocket
+      x-code-samples:
+        - lang: JavaScript
+          source: |
+            const ws = new WebSocket('ws://4.3.2.1:8080/audio');
+            ws.onopen = () => console.log('Audio connected');
+            ws.onmessage = (event) => {
+              const audioData = new Uint8Array(event.data);
+              // Process audio data
+            };
+
+  /uploadFile:
+    post:
+      summary: Upload file to device
+      description: Uploads a file to the SD card
+      operationId: uploadFile
+      tags:
+        - Files
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: File to upload
+                filename:
+                  type: string
+                  description: Target filename on SD card
+      responses:
+        '200':
+          description: File uploaded successfully
+        '400':
+          description: Bad request
+        '404':
+          description: Upload endpoint not available
+
+components:
+  schemas:
+    DeviceStatus:
+      type: object
+      properties:
+        sdCardPercentFull:
+          type: integer
+        uptime:
+          type: string
+        status:
+          type: string
+        errorCount:
+          type: integer
+        USBmode:
+          type: string
+        freeHeap:
+          type: integer
+        heapSize:
+          type: integer
+        agentConnected:
+          type: boolean
+        machineName:
+          type: string
+        version:
+          type: string
+        heapUsagePc:
+          type: integer
+        numCores:
+          type: integer
+        chipModel:
+          type: string
+        fileListing:
+          type: array
+          items:
+            type: string
+        logMessages:
+          type: array
+          items:
+            type: string
+        settingCategories:
+          type: array
+          items:
+            type: object
+        capabilities:
+          type: array
+          items:
+            type: string
+
+tags:
+  - name: Device
+    description: Device status and information
+  - name: Files
+    description: File management operations
+  - name: Execution
+    description: Execute scripts and commands
+  - name: Agent
+    description: Agent-related operations
+  - name: Display
+    description: Display control
+  - name: Marauder
+    description: ESP32 Marauder attacks
+  - name: Audio
+    description: Audio capture and streaming
+  - name: Settings
+    description: Device configuration
+  - name: Web Interface
+    description: Web UI endpoints
+  - name: WebSocket
+    description: WebSocket connections

