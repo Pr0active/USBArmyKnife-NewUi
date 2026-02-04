@@ -10,6 +10,8 @@ import Agent from './pages/Agent'
 import Logs from './pages/Logs'
 import Docs from './pages/Docs'
 import Settings from './pages/Settings'
+import Update from './pages/Update'
+import Microphone from './pages/Microphone'
 import { ToastContainer } from './utils/toast'
 
 function App() {
@@ -24,7 +26,9 @@ function App() {
           <Route path="/display" element={<Display />} />
           <Route path="/keyboard" element={<Keyboard />} />
           <Route path="/agent" element={<Agent />} />
+          <Route path="/microphone" element={<Microphone />} />
           <Route path="/logs" element={<Logs />} />
+          <Route path="/update" element={<Update />} />
           <Route path="/docs" element={<Docs />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>

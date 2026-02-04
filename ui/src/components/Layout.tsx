@@ -56,6 +56,7 @@ export default function Layout({ children }: LayoutProps) {
     { path: "/scripts", label: "Scripts", icon: "⚡" },
     { path: "/display", label: "Display", icon: "🖥️" },
     { path: "/logs", label: "Logs", icon: "📝" },
+    { path: "/update", label: "Update", icon: "⬆️" },
     { path: "/docs", label: "API Docs", icon: "📚" },
   ];
 
@@ -63,6 +64,7 @@ export default function Layout({ children }: LayoutProps) {
     { path: "/marauder", label: "Marauder", icon: "🎯" },
     { path: "/keyboard", label: "DuckyScript/Keyboard", icon: "⌨️" },
     { path: "/agent", label: "Agent", icon: "🤖" },
+    { path: "/microphone", label: "Microphone", icon: "🎤" },
   ];
 
   const isCommandsPage = commandItems.some(item => location.pathname === item.path);

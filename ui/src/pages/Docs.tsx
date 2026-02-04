@@ -3,7 +3,7 @@ import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 import * as yaml from "js-yaml";
 import { getDeviceUrl } from "../utils/config";
-import { shouldUseProxy, PROXY_PREFIX } from "../utils/proxy";
+import { shouldUseProxy, PROXY_PREFIX, getApiUrl } from "../utils/proxy";
 
 export default function Docs() {
   const [spec, setSpec] = useState<any>(null);
@@ -75,6 +75,25 @@ export default function Docs() {
         <p className="mt-1 text-sm text-gray-500">
           Complete API reference for USBArmyKnife{" "}
         </p>
+      </div>
+      <div className="mb-6 bg-white shadow rounded-lg p-5">
+        <div className="flex items-start gap-3">
+          <div className="text-2xl">⬆️</div>
+          <div className="flex-1">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Firmware Update
+            </h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Open the device OTA update page to upload a new firmware image.
+            </p>
+          </div>
+          <a
+            href={getApiUrl("/update")}
+            className="inline-flex items-center px-3 py-2 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
+          >
+            Open Update Page
+          </a>
+        </div>
       </div>
       <div className="bg-white shadow rounded-lg overflow-hidden">
         <SwaggerUI spec={spec} />
