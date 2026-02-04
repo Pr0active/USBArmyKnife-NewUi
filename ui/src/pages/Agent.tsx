@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../services/api'
+import { getDeviceUrl } from '../utils/config'
 import { showToast } from '../utils/toast'
 
 const AGENT_COMMANDS = [
@@ -22,7 +23,10 @@ export default function Agent() {
   const [command, setCommand] = useState('')
   const [executing, setExecuting] = useState(false)
   const [commandHistory, setCommandHistory] = useState<string[]>([])
+  const [showRemoteScreen, setShowRemoteScreen] = useState(true)
   const navigate = useNavigate()
+  const deviceUrl = getDeviceUrl()
+  const vncUrl = `${deviceUrl}/vnc/index.html`
 
   const handleExecute = async () => {
     if (!command.trim()) {
@@ -109,6 +113,45 @@ export default function Agent() {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div className="bg-white shadow rounded-lg">
+            <div className="px-4 py-5 sm:p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-medium text-gray-900">
+                  Remote Screen
+                </h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowRemoteScreen((prev) => !prev)}
+                    className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm"
+                  >
+                    {showRemoteScreen ? 'Hide' : 'Show'}
+                  </button>
+                  <a
+                    href={vncUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                  >
+                    Open VNC
+                  </a>
+                </div>
+              </div>
+              {showRemoteScreen ? (
+                <div className="rounded-lg overflow-hidden border border-gray-200">
+                  <iframe
+                    title="Remote Screen"
+                    src={vncUrl}
+                    className="w-full h-[420px] bg-black"
+                  />
+                </div>
+              ) : (
+                <div className="text-sm text-gray-500">
+                  Remote screen is hidden. Click "Show" to display it.
+                </div>
+              )}
             </div>
           </div>
 
